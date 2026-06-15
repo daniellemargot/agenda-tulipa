@@ -1,0 +1,2282 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agenda Tulipa 🌷</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --pink-deep: #ad0087;
+  --pink-main: #ff66c4;
+  --pink-light: #ffbee6;
+  --pink-pale: #fff0fa;
+  --pink-ultra: #ffe0f5;
+  --white: #ffffff;
+  --text-dark: #3a003a;
+  --text-mid: #7a3a6a;
+  --text-light: #c47ab0;
+  --status-done: #4caf7d;
+  --status-cancel: #e85d5d;
+  --status-delayed: #f59e0b;
+  --urgent: #e85d5d;
+  --normal: #f59e0b;
+  --low: #4caf7d;
+  --shadow: 0 4px 24px rgba(173,0,135,0.10);
+  --shadow-sm: 0 2px 8px rgba(173,0,135,0.08);
+  --radius: 18px;
+  --radius-sm: 10px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  background: var(--pink-pale);
+  color: var(--text-dark);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── FLOWER SVG decorations ── */
+.flower-bg {
+  position: fixed;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.07;
+}
+.flower-bg.top-right { top: -60px; right: -60px; width: 320px; }
+.flower-bg.bottom-left { bottom: -80px; left: -60px; width: 280px; }
+
+/* ── AUTH SCREENS ── */
+#auth-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: linear-gradient(135deg, var(--pink-pale) 0%, var(--pink-ultra) 100%);
+}
+
+.auth-card {
+  background: var(--white);
+  border-radius: 28px;
+  padding: 48px 40px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 8px 48px rgba(173,0,135,0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, var(--pink-main), var(--pink-deep));
+}
+
+.auth-logo {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.auth-logo .title-font {
+  font-family: 'Dancing Script', cursive;
+  font-size: 2.4rem;
+  color: var(--pink-deep);
+  line-height: 1;
+}
+
+.auth-logo .subtitle {
+  font-size: 0.75rem;
+  color: var(--text-light);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+.auth-flower {
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+.auth-tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 28px;
+  background: var(--pink-pale);
+  border-radius: var(--radius-sm);
+  padding: 4px;
+}
+
+.auth-tab {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-light);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.auth-tab.active {
+  background: var(--white);
+  color: var(--pink-deep);
+  box-shadow: var(--shadow-sm);
+}
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-mid);
+  margin-bottom: 6px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1.5px solid var(--pink-light);
+  border-radius: var(--radius-sm);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.9rem;
+  color: var(--text-dark);
+  background: var(--white);
+  transition: border-color 0.2s;
+  outline: none;
+}
+
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+  border-color: var(--pink-main);
+  box-shadow: 0 0 0 3px rgba(255,102,196,0.12);
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--pink-main), var(--pink-deep));
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.05em;
+}
+
+.btn-primary:hover { opacity: 0.92; transform: translateY(-1px); }
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+  color: var(--text-light);
+  font-size: 0.78rem;
+}
+
+.divider::before, .divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--pink-light);
+}
+
+.btn-google {
+  width: 100%;
+  padding: 13px;
+  background: var(--white);
+  border: 1.5px solid var(--pink-light);
+  border-radius: var(--radius-sm);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.2s;
+}
+
+.btn-google:hover { background: var(--pink-pale); border-color: var(--pink-main); }
+
+.google-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.auth-error {
+  background: #fff0f0;
+  border: 1px solid #ffc5c5;
+  color: #c0392b;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  margin-bottom: 16px;
+  display: none;
+}
+
+/* ── MAIN APP ── */
+#app-screen { display: none; min-height: 100vh; }
+
+/* ── SIDEBAR NAV ── */
+.sidebar {
+  position: fixed;
+  left: 0; top: 0; bottom: 0;
+  width: 230px;
+  background: linear-gradient(180deg, var(--pink-deep) 0%, #7a0060 100%);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  box-shadow: 4px 0 24px rgba(173,0,135,0.18);
+  transition: transform 0.3s ease;
+}
+
+.sidebar-logo {
+  padding: 32px 24px 24px;
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+}
+
+.sidebar-logo .app-name {
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.9rem;
+  color: var(--white);
+  line-height: 1;
+}
+
+.sidebar-logo .app-sub {
+  font-size: 0.68rem;
+  color: rgba(255,255,255,0.6);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-top: 3px;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 16px 0;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 24px;
+  color: rgba(255,255,255,0.75);
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-left: 3px solid transparent;
+  text-decoration: none;
+}
+
+.nav-item:hover { background: rgba(255,255,255,0.1); color: white; }
+
+.nav-item.active {
+  background: rgba(255,255,255,0.15);
+  color: white;
+  border-left-color: var(--pink-light);
+  font-weight: 700;
+}
+
+.nav-icon { font-size: 1.1rem; width: 22px; text-align: center; }
+
+.sidebar-footer {
+  padding: 20px 24px;
+  border-top: 1px solid rgba(255,255,255,0.12);
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--pink-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  overflow: hidden;
+}
+
+.user-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+.user-name {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: white;
+}
+
+.btn-logout {
+  width: 100%;
+  padding: 9px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 8px;
+  color: rgba(255,255,255,0.8);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-logout:hover { background: rgba(255,255,255,0.2); }
+
+/* ── MAIN CONTENT ── */
+.main-content {
+  margin-left: 230px;
+  min-height: 100vh;
+  background: var(--pink-pale);
+  transition: margin-left 0.3s ease;
+}
+
+/* ── MOBILE HEADER ── */
+.mobile-header {
+  display: none;
+  position: sticky;
+  top: 0;
+  z-index: 90;
+  background: white;
+  padding: 14px 20px;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--shadow-sm);
+}
+
+.hamburger {
+  width: 36px;
+  height: 36px;
+  background: var(--pink-pale);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.hamburger span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: var(--pink-deep);
+  border-radius: 2px;
+}
+
+.mobile-title {
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.4rem;
+  color: var(--pink-deep);
+}
+
+/* ── OVERLAY ── */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 99;
+}
+
+/* ── SCREENS ── */
+.screen { display: none; padding: 32px; }
+.screen.active { display: block; }
+
+/* ── HOME SCREEN ── */
+.home-greeting {
+  margin-bottom: 32px;
+}
+
+.greeting-card {
+  background: linear-gradient(135deg, var(--pink-deep) 0%, var(--pink-main) 100%);
+  border-radius: var(--radius);
+  padding: 32px 36px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.greeting-card::after {
+  content: '🌷';
+  position: absolute;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 5rem;
+  opacity: 0.2;
+}
+
+.greeting-card .day-info {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  opacity: 0.8;
+  margin-bottom: 6px;
+}
+
+.greeting-card h1 {
+  font-family: 'Dancing Script', cursive;
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.greeting-card .sub-msg {
+  font-size: 0.9rem;
+  opacity: 0.85;
+  font-weight: 300;
+}
+
+.home-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.stat-card {
+  background: white;
+  border-radius: var(--radius);
+  padding: 20px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  border-top: 3px solid var(--pink-light);
+}
+
+.stat-card .stat-num {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--pink-deep);
+  line-height: 1;
+}
+
+.stat-card .stat-label {
+  font-size: 0.75rem;
+  color: var(--text-light);
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.home-today h2 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-mid);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.home-today h2::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--pink-light);
+}
+
+/* ── COMMITMENT CARDS ── */
+.appointment-card {
+  background: white;
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  border-left: 4px solid var(--pink-light);
+  transition: transform 0.15s;
+}
+
+.appointment-card:hover { transform: translateX(2px); }
+.appointment-card.status-done { border-left-color: var(--status-done); background: #f0fff6; }
+.appointment-card.status-cancel { border-left-color: var(--status-cancel); background: #fff5f5; }
+.appointment-card.status-delayed { border-left-color: var(--status-delayed); background: #fffbf0; }
+
+.appt-time {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--pink-deep);
+  white-space: nowrap;
+  padding-top: 2px;
+}
+
+.appt-body { flex: 1; }
+
+.appt-title {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 2px;
+}
+
+.appt-obs {
+  font-size: 0.75rem;
+  color: var(--text-light);
+  font-style: italic;
+}
+
+.appt-tags {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+
+.tag {
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.tag-urgent { background: #ffe0e0; color: var(--urgent); }
+.tag-normal { background: #fff4e0; color: var(--normal); }
+.tag-low { background: #e0f7ec; color: var(--low); }
+.tag-cat { background: var(--pink-ultra); color: var(--pink-deep); }
+.tag-done { background: #e0f7ec; color: var(--status-done); }
+.tag-cancel { background: #ffe0e0; color: var(--status-cancel); }
+.tag-delayed { background: #fff4e0; color: var(--status-delayed); }
+
+.appt-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.appt-actions button {
+  padding: 5px 12px;
+  border: none;
+  border-radius: 6px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-edit { background: var(--pink-ultra); color: var(--pink-deep); }
+.btn-edit:hover { background: var(--pink-light); }
+.btn-delete { background: #fff0f0; color: var(--status-cancel); }
+.btn-delete:hover { background: #ffe0e0; }
+.btn-done { background: #e0f7ec; color: var(--status-done); }
+.btn-done:hover { background: #c8f0db; }
+.btn-cancel-appt { background: #ffe0e0; color: var(--status-cancel); }
+.btn-delay { background: #fff4e0; color: var(--status-delayed); }
+
+/* ── FAB ── */
+.fab {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(135deg, var(--pink-main), var(--pink-deep));
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 1.6rem;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(173,0,135,0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  z-index: 80;
+}
+
+.fab:hover { transform: scale(1.08); }
+
+/* ── DAILY SCREEN ── */
+.screen-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.screen-header h2 {
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.9rem;
+  color: var(--pink-deep);
+}
+
+.date-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: white;
+  border-radius: var(--radius-sm);
+  padding: 8px 14px;
+  box-shadow: var(--shadow-sm);
+}
+
+.date-nav button {
+  background: none;
+  border: none;
+  color: var(--pink-deep);
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: background 0.15s;
+}
+
+.date-nav button:hover { background: var(--pink-pale); }
+
+.date-nav .current-date {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  min-width: 140px;
+  text-align: center;
+}
+
+.add-btn {
+  padding: 10px 20px;
+  background: linear-gradient(135deg, var(--pink-main), var(--pink-deep));
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.add-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-light);
+}
+
+.empty-state .empty-icon { font-size: 3rem; margin-bottom: 12px; }
+.empty-state p { font-size: 0.9rem; }
+
+/* ── WEEKLY SCREEN ── */
+#screen-weekly.active {
+  padding: 20px;
+}
+
+.weekly-back {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  cursor: pointer;
+  color: var(--pink-deep);
+  font-weight: 600;
+  font-size: 0.9rem;
+  width: fit-content;
+}
+
+.weekly-back:hover { text-decoration: underline; }
+
+.weekly-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+  min-height: 70vh;
+}
+
+.weekly-col {
+  background: white;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.weekly-col-header {
+  background: linear-gradient(180deg, var(--pink-main), var(--pink-deep));
+  color: white;
+  padding: 10px 8px;
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.weekly-col-header .day-num {
+  font-size: 1.4rem;
+  font-weight: 700;
+  display: block;
+  line-height: 1.2;
+}
+
+.weekly-col.today .weekly-col-header {
+  background: linear-gradient(180deg, var(--pink-deep), #5a0048);
+}
+
+.weekly-col-body {
+  padding: 8px;
+}
+
+.weekly-appt {
+  background: var(--pink-pale);
+  border-radius: 6px;
+  padding: 7px 8px;
+  margin-bottom: 6px;
+  border-left: 3px solid var(--pink-main);
+  font-size: 0.72rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.weekly-appt:hover { background: var(--pink-ultra); }
+.weekly-appt.status-done { border-left-color: var(--status-done); background: #f0fff6; }
+.weekly-appt.status-cancel { border-left-color: var(--status-cancel); background: #fff5f5; }
+.weekly-appt.status-delayed { border-left-color: var(--status-delayed); background: #fffbf0; }
+
+.weekly-appt .w-time { font-weight: 700; color: var(--pink-deep); }
+.weekly-appt .w-title { color: var(--text-dark); margin-top: 1px; }
+
+.weekly-add-btn {
+  width: 100%;
+  padding: 7px;
+  background: var(--pink-pale);
+  border: 1.5px dashed var(--pink-light);
+  border-radius: 6px;
+  color: var(--text-light);
+  font-size: 0.72rem;
+  cursor: pointer;
+  margin-top: 4px;
+  transition: all 0.15s;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.weekly-add-btn:hover { background: var(--pink-ultra); border-color: var(--pink-main); color: var(--pink-deep); }
+
+.see-more-btn {
+  width: 100%;
+  padding: 5px;
+  background: none;
+  border: none;
+  color: var(--pink-main);
+  font-size: 0.7rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* ── CALENDAR SCREEN ── */
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.month-title {
+  font-family: 'Dancing Script', cursive;
+  font-size: 2.4rem;
+  color: var(--pink-deep);
+}
+
+.month-nav {
+  display: flex;
+  gap: 8px;
+}
+
+.month-nav button {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1.5px solid var(--pink-light);
+  background: white;
+  color: var(--pink-deep);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.month-nav button:hover { background: var(--pink-light); }
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.cal-day-header {
+  text-align: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-light);
+  text-transform: uppercase;
+  padding: 8px 0;
+  letter-spacing: 0.08em;
+}
+
+.cal-day {
+  background: white;
+  border-radius: 10px;
+  padding: 10px 8px;
+  min-height: 80px;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: all 0.15s;
+  position: relative;
+  border: 1.5px solid transparent;
+}
+
+.cal-day:hover { border-color: var(--pink-light); transform: translateY(-1px); }
+.cal-day.today { border-color: var(--pink-main); background: var(--pink-pale); }
+.cal-day.other-month { opacity: 0.35; }
+.cal-day.selected { border-color: var(--pink-deep); background: var(--pink-ultra); }
+
+.cal-day-num {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 4px;
+}
+
+.cal-day.today .cal-day-num {
+  color: var(--pink-deep);
+}
+
+.cal-appt-count {
+  font-size: 0.68rem;
+  color: var(--text-light);
+  font-weight: 600;
+}
+
+.cal-appt-dots {
+  display: flex;
+  gap: 3px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.cal-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--pink-main);
+}
+
+.cal-dot.urgent { background: var(--urgent); }
+.cal-dot.normal { background: var(--normal); }
+.cal-dot.low { background: var(--low); }
+
+/* ── DAY POPUP (calendar) ── */
+.day-popup-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.day-popup-overlay.open { display: flex; }
+
+.day-popup {
+  background: white;
+  border-radius: var(--radius);
+  padding: 28px;
+  width: 100%;
+  max-width: 440px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 8px 48px rgba(173,0,135,0.2);
+  position: relative;
+}
+
+.day-popup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.day-popup-date {
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.6rem;
+  color: var(--pink-deep);
+}
+
+.day-popup-close {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: var(--pink-pale);
+  color: var(--text-mid);
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.day-popup-goto {
+  margin-top: 16px;
+  width: 100%;
+  padding: 10px;
+  background: var(--pink-pale);
+  border: 1.5px solid var(--pink-light);
+  border-radius: 8px;
+  color: var(--pink-deep);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.day-popup-goto:hover { background: var(--pink-ultra); }
+
+/* ── MODAL (appointment form) ── */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 300;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-overlay.open { display: flex; }
+
+.modal {
+  background: white;
+  border-radius: var(--radius);
+  padding: 32px;
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 8px 48px rgba(173,0,135,0.2);
+  position: relative;
+}
+
+.modal::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--pink-main), var(--pink-deep));
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.modal-title {
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.6rem;
+  color: var(--pink-deep);
+}
+
+.modal-close {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  background: var(--pink-pale);
+  color: var(--text-mid);
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.modal-close:hover { background: var(--pink-ultra); }
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.repeat-options {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.repeat-opt {
+  flex: 1;
+  padding: 9px 10px;
+  border: 1.5px solid var(--pink-light);
+  border-radius: 8px;
+  background: white;
+  color: var(--text-mid);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.15s;
+  min-width: 60px;
+}
+
+.repeat-opt.active {
+  background: var(--pink-main);
+  border-color: var(--pink-main);
+  color: white;
+}
+
+.repeat-duration {
+  display: none;
+  margin-top: 10px;
+}
+
+.repeat-duration.show { display: block; }
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.btn-save {
+  flex: 1;
+  padding: 13px;
+  background: linear-gradient(135deg, var(--pink-main), var(--pink-deep));
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-save:hover { opacity: 0.9; }
+
+.btn-cancel-modal {
+  padding: 13px 20px;
+  background: var(--pink-pale);
+  border: 1.5px solid var(--pink-light);
+  border-radius: var(--radius-sm);
+  color: var(--text-mid);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-cancel-modal:hover { background: var(--pink-ultra); }
+
+/* ── CONFIRM DIALOG ── */
+.confirm-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 400;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.confirm-overlay.open { display: flex; }
+
+.confirm-box {
+  background: white;
+  border-radius: var(--radius);
+  padding: 28px;
+  width: 100%;
+  max-width: 380px;
+  box-shadow: 0 8px 48px rgba(0,0,0,0.2);
+  text-align: center;
+}
+
+.confirm-box h3 {
+  font-size: 1.1rem;
+  color: var(--text-dark);
+  margin-bottom: 8px;
+}
+
+.confirm-box p {
+  font-size: 0.85rem;
+  color: var(--text-light);
+  margin-bottom: 20px;
+}
+
+.confirm-btns {
+  display: flex;
+  gap: 10px;
+}
+
+.confirm-btns button {
+  flex: 1;
+  padding: 11px;
+  border-radius: 8px;
+  border: none;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-this-only { background: var(--pink-ultra); color: var(--pink-deep); }
+.btn-this-only:hover { background: var(--pink-light); }
+.btn-all { background: linear-gradient(135deg, var(--pink-main), var(--pink-deep)); color: white; }
+.btn-all:hover { opacity: 0.9; }
+.btn-no { background: #f5f5f5; color: var(--text-mid); }
+.btn-no:hover { background: #ebebeb; }
+
+/* ── STATUS QUICK ACTIONS ── */
+.status-actions {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+
+.status-actions button {
+  padding: 4px 10px;
+  border: none;
+  border-radius: 5px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+/* ── TOAST ── */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--text-dark);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 24px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  z-index: 500;
+  transition: transform 0.3s ease;
+  white-space: nowrap;
+}
+
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ── LOADING ── */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: var(--text-light);
+  font-size: 0.9rem;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  .sidebar-overlay.open { display: block; }
+  .main-content { margin-left: 0; }
+  .mobile-header { display: flex; }
+  .screen { padding: 20px; }
+  .weekly-grid { grid-template-columns: repeat(4, 1fr); }
+  .home-stats { grid-template-columns: repeat(3, 1fr); }
+  .form-row { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 600px) {
+  .weekly-grid { grid-template-columns: repeat(2, 1fr); }
+  .home-stats { grid-template-columns: repeat(3, 1fr); }
+  .greeting-card h1 { font-size: 1.6rem; }
+  .calendar-grid { gap: 3px; }
+  .cal-day { min-height: 60px; padding: 6px 4px; }
+  .cal-day-num { font-size: 0.8rem; }
+  .appt-actions { flex-direction: row; flex-wrap: wrap; }
+}
+
+.form-group select option { font-family: 'Montserrat', sans-serif; }
+
+/* notification dot on sidebar */
+.notif-badge {
+  background: var(--pink-light);
+  color: var(--pink-deep);
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 10px;
+  margin-left: auto;
+}
+</style>
+</head>
+<body>
+
+<!-- AUTH SCREEN -->
+<div id="auth-screen">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <div class="auth-flower">🌷</div>
+      <div class="title-font">Agenda Tulipa</div>
+      <div class="subtitle">seu espaço organizado</div>
+    </div>
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchAuthTab('login')">Entrar</button>
+      <button class="auth-tab" onclick="switchAuthTab('register')">Criar conta</button>
+    </div>
+
+    <div id="auth-error" class="auth-error"></div>
+
+    <!-- LOGIN -->
+    <div id="login-form">
+      <div class="form-group">
+        <label>E-mail</label>
+        <input type="email" id="login-email" placeholder="seu@email.com">
+      </div>
+      <div class="form-group">
+        <label>Senha</label>
+        <input type="password" id="login-password" placeholder="••••••••">
+      </div>
+      <button class="btn-primary" onclick="loginEmail()">Entrar 🌷</button>
+      <div class="divider">ou</div>
+      <button class="btn-google" onclick="loginGoogle()">
+        <svg class="google-icon" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Entrar com Google
+      </button>
+    </div>
+
+    <!-- REGISTER -->
+    <div id="register-form" style="display:none">
+      <div class="form-group">
+        <label>Nome</label>
+        <input type="text" id="reg-name" placeholder="Seu nome">
+      </div>
+      <div class="form-group">
+        <label>E-mail</label>
+        <input type="email" id="reg-email" placeholder="seu@email.com">
+      </div>
+      <div class="form-group">
+        <label>Senha</label>
+        <input type="password" id="reg-password" placeholder="••••••••">
+      </div>
+      <button class="btn-primary" onclick="registerEmail()">Criar conta 🌷</button>
+      <div class="divider">ou</div>
+      <button class="btn-google" onclick="loginGoogle()">
+        <svg class="google-icon" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Cadastrar com Google
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- APP SCREEN -->
+<div id="app-screen">
+
+  <!-- Sidebar overlay -->
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <!-- Sidebar -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="app-name">Agenda Tulipa</div>
+      <div class="app-sub">🌷 seu espaço</div>
+    </div>
+    <div class="sidebar-nav">
+      <div class="nav-item active" onclick="showScreen('home')" id="nav-home">
+        <span class="nav-icon">🏠</span> Início
+      </div>
+      <div class="nav-item" onclick="showScreen('daily')" id="nav-daily">
+        <span class="nav-icon">📋</span> Agenda Diária
+      </div>
+      <div class="nav-item" onclick="showScreen('weekly')" id="nav-weekly">
+        <span class="nav-icon">📆</span> Agenda Semanal
+      </div>
+      <div class="nav-item" onclick="showScreen('calendar')" id="nav-calendar">
+        <span class="nav-icon">🗓️</span> Calendário
+      </div>
+    </div>
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="user-avatar" id="user-avatar">🌷</div>
+        <div class="user-name" id="user-display-name">Tulipa</div>
+      </div>
+      <button class="btn-logout" onclick="logout()">Sair da conta</button>
+    </div>
+  </nav>
+
+  <!-- Main content -->
+  <div class="main-content">
+
+    <!-- Mobile header -->
+    <div class="mobile-header">
+      <button class="hamburger" onclick="toggleSidebar()">
+        <span></span><span></span><span></span>
+      </button>
+      <span class="mobile-title" id="mobile-screen-title">Início</span>
+      <div style="width:36px"></div>
+    </div>
+
+    <!-- HOME -->
+    <div class="screen active" id="screen-home">
+      <div class="home-greeting">
+        <div class="greeting-card">
+          <div class="day-info" id="greeting-day-info">Segunda-feira, 15 de junho</div>
+          <h1 id="greeting-text">Bem-vinda, Tulipa 🌷</h1>
+          <div class="sub-msg" id="greeting-sub">Vamos ver quais são os planos pra hoje?</div>
+        </div>
+      </div>
+      <div class="home-stats">
+        <div class="stat-card">
+          <div class="stat-num" id="stat-today">0</div>
+          <div class="stat-label">Hoje</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" id="stat-week">0</div>
+          <div class="stat-label">Esta semana</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" id="stat-urgent">0</div>
+          <div class="stat-label">Urgentes</div>
+        </div>
+      </div>
+      <div class="home-today">
+        <h2>Compromissos de hoje</h2>
+        <div id="home-today-list"><div class="loading">Carregando... 🌷</div></div>
+      </div>
+    </div>
+
+    <!-- DAILY -->
+    <div class="screen" id="screen-daily">
+      <div class="screen-header">
+        <h2>Agenda Diária</h2>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+          <div class="date-nav">
+            <button onclick="changeDay(-1)">‹</button>
+            <span class="current-date" id="daily-date-label">—</span>
+            <button onclick="changeDay(1)">›</button>
+          </div>
+          <button class="add-btn" onclick="openModal(null, currentDailyDate)">+ Novo compromisso</button>
+        </div>
+      </div>
+      <div id="daily-list"><div class="loading">Carregando... 🌷</div></div>
+    </div>
+
+    <!-- WEEKLY -->
+    <div class="screen" id="screen-weekly">
+      <div class="weekly-back" onclick="showScreen('home')">← Voltar ao início</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+        <h2 style="font-family:'Dancing Script',cursive;font-size:1.9rem;color:var(--pink-deep)">Agenda Semanal</h2>
+        <div class="date-nav">
+          <button onclick="changeWeek(-1)">‹</button>
+          <span class="current-date" id="weekly-label">—</span>
+          <button onclick="changeWeek(1)">›</button>
+        </div>
+      </div>
+      <div class="weekly-grid" id="weekly-grid"></div>
+    </div>
+
+    <!-- CALENDAR -->
+    <div class="screen" id="screen-calendar">
+      <div class="calendar-header">
+        <h2 class="month-title" id="cal-month-title">Junho 2026</h2>
+        <div class="month-nav">
+          <button onclick="changeMonth(-1)">‹</button>
+          <button onclick="changeMonth(1)">›</button>
+        </div>
+      </div>
+      <div class="calendar-grid" id="calendar-grid"></div>
+    </div>
+
+  </div><!-- /main-content -->
+</div><!-- /app-screen -->
+
+<!-- ── MODALS ── -->
+
+<!-- Appointment Form Modal -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-title">Novo compromisso</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+
+    <div class="form-group">
+      <label>Nome do compromisso *</label>
+      <input type="text" id="f-name" placeholder="Ex: Consulta médica">
+    </div>
+
+    <div class="form-group">
+      <label>Observação</label>
+      <input type="text" id="f-obs" placeholder="Ex: não posso remarcar">
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Data *</label>
+        <input type="date" id="f-date">
+      </div>
+      <div class="form-group">
+        <label>Urgência</label>
+        <select id="f-urgency">
+          <option value="normal">Normal</option>
+          <option value="urgent">Urgente</option>
+          <option value="low">Baixa prioridade</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Horário início *</label>
+        <input type="time" id="f-time-start">
+      </div>
+      <div class="form-group">
+        <label>Horário fim</label>
+        <input type="time" id="f-time-end">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Categoria</label>
+      <select id="f-category">
+        <option value="trabalho">💼 Trabalho</option>
+        <option value="faculdade">📚 Faculdade</option>
+        <option value="capoeira">🥋 Capoeira</option>
+        <option value="academia">🏋️ Academia</option>
+        <option value="lazer">🎉 Lazer</option>
+        <option value="compromisso_pessoal">🧍 Compromisso pessoal</option>
+        <option value="saude">❤️ Saúde</option>
+        <option value="igreja">✝️ Igreja</option>
+        <option value="outro">⭐ Outro</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Repetir compromisso?</label>
+      <div class="repeat-options">
+        <button class="repeat-opt active" data-val="none" onclick="setRepeat('none')">Não</button>
+        <button class="repeat-opt" data-val="daily" onclick="setRepeat('daily')">Diariamente</button>
+        <button class="repeat-opt" data-val="weekly" onclick="setRepeat('weekly')">Semanalmente</button>
+        <button class="repeat-opt" data-val="monthly" onclick="setRepeat('monthly')">Mensalmente</button>
+      </div>
+      <div class="repeat-duration" id="repeat-duration-div">
+        <div class="form-group" style="margin-bottom:0;margin-top:10px">
+          <label id="repeat-duration-label">Repetir durante quantas semanas?</label>
+          <input type="number" id="f-repeat-count" min="1" max="52" placeholder="Ex: 4" value="4">
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-cancel-modal" onclick="closeModal()">Sair</button>
+      <button class="btn-save" onclick="saveAppointment()">Salvar 🌷</button>
+    </div>
+  </div>
+</div>
+
+<!-- Day Popup (Calendar) -->
+<div class="day-popup-overlay" id="day-popup-overlay">
+  <div class="day-popup">
+    <div class="day-popup-header">
+      <div class="day-popup-date" id="day-popup-date">—</div>
+      <button class="day-popup-close" onclick="closeDayPopup()">✕</button>
+    </div>
+    <div id="day-popup-list"></div>
+    <button class="day-popup-goto" onclick="goToDailyFromPopup()">📋 Ver agenda diária deste dia →</button>
+  </div>
+</div>
+
+<!-- Repeat Confirm Dialog -->
+<div class="confirm-overlay" id="confirm-overlay">
+  <div class="confirm-box">
+    <div style="font-size:2rem;margin-bottom:10px">🌷</div>
+    <h3 id="confirm-title">Editar compromisso recorrente</h3>
+    <p id="confirm-msg">Este compromisso se repete. O que deseja fazer?</p>
+    <div class="confirm-btns" id="confirm-btns"></div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- FIREBASE + APP LOGIC -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, orderBy, Timestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDuHKl5yvADSBqQ6gIrjwwrhYh505AjkUo",
+  authDomain: "agenda-tulipa.firebaseapp.com",
+  projectId: "agenda-tulipa",
+  storageBucket: "agenda-tulipa.firebasestorage.app",
+  messagingSenderId: "245350552406",
+  appId: "1:245350552406:web:6de894531f7e6a65c93cf7",
+  measurementId: "G-V5C0HL062C"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const googleProvider = new GoogleAuthProvider();
+
+// ── STATE ──
+let currentUser = null;
+let allAppointments = [];
+let currentDailyDate = todayStr();
+let currentWeekStart = getWeekStart(new Date());
+let currentCalMonth = new Date();
+let editingId = null;
+let editingGroupId = null;
+let currentRepeat = 'none';
+let selectedCalDay = null;
+let pendingConfirmResolve = null;
+
+// expose globals
+window.currentDailyDate = currentDailyDate;
+
+// ── HELPERS ──
+function todayStr() {
+  return new Date().toISOString().split('T')[0];
+}
+
+function getWeekStart(date) {
+  const d = new Date(date);
+  const day = d.getDay(); // 0=Sun
+  const diff = day === 0 ? -6 : 1 - day; // Monday start
+  d.setDate(d.getDate() + diff);
+  d.setHours(0,0,0,0);
+  return d;
+}
+
+function dateStr(date) {
+  return date.toISOString().split('T')[0];
+}
+
+function addDays(date, n) {
+  const d = new Date(date);
+  d.setDate(d.getDate() + n);
+  return d;
+}
+
+function formatDatePT(str) {
+  const [y,m,d] = str.split('-');
+  const months = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+  return `${parseInt(d)} de ${months[parseInt(m)-1]} de ${y}`;
+}
+
+function formatDateShort(str) {
+  const [y,m,d] = str.split('-');
+  return `${d}/${m}/${y}`;
+}
+
+function dayOfWeekPT(str) {
+  const days = ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
+  const d = new Date(str + 'T12:00:00');
+  return days[d.getDay()];
+}
+
+function greetingMsg() {
+  const h = new Date().getHours();
+  if (h < 12) return 'Bom dia, Tulipa 🌷';
+  if (h < 18) return 'Boa tarde, Tulipa 🌷';
+  return 'Boa noite, Tulipa 🌷';
+}
+
+function subMsg() {
+  const day = new Date().getDay();
+  const days = ['domingo','segunda-feira','terça-feira','quarta-feira','quinta-feira','sexta-feira','sábado'];
+  return `Uma excelente ${days[day]}. Vamos ver quais são os planos pra hoje?`;
+}
+
+function urgencyTag(u) {
+  if (u === 'urgent') return '<span class="tag tag-urgent">Urgente</span>';
+  if (u === 'low') return '<span class="tag tag-low">Baixa</span>';
+  return '<span class="tag tag-normal">Normal</span>';
+}
+
+function catLabel(c) {
+  const map = { trabalho:'💼 Trabalho', faculdade:'📚 Faculdade', capoeira:'🥋 Capoeira', academia:'🏋️ Academia', lazer:'🎉 Lazer', compromisso_pessoal:'🧍 Pessoal', saude:'❤️ Saúde', igreja:'✝️ Igreja', outro:'⭐ Outro' };
+  return map[c] || c;
+}
+
+function statusClass(s) {
+  if (s === 'done') return 'status-done';
+  if (s === 'cancelled') return 'status-cancel';
+  if (s === 'delayed') return 'status-delayed';
+  return '';
+}
+
+function statusTag(s) {
+  if (s === 'done') return '<span class="tag tag-done">✔ Concluído</span>';
+  if (s === 'cancelled') return '<span class="tag tag-cancel">✕ Cancelado</span>';
+  if (s === 'delayed') return '<span class="tag tag-delayed">⏳ Adiado</span>';
+  return '';
+}
+
+function showToast(msg, duration=2800) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), duration);
+}
+
+// ── AUTH LISTENERS ──
+onAuthStateChanged(auth, user => {
+  if (user) {
+    currentUser = user;
+    document.getElementById('auth-screen').style.display = 'none';
+    document.getElementById('app-screen').style.display = 'block';
+    document.getElementById('user-display-name').textContent = user.displayName || 'Tulipa';
+    if (user.photoURL) {
+      document.getElementById('user-avatar').innerHTML = `<img src="${user.photoURL}">`;
+    }
+    loadAppointments();
+    setupGreeting();
+    requestNotificationPermission();
+  } else {
+    currentUser = null;
+    document.getElementById('auth-screen').style.display = 'flex';
+    document.getElementById('app-screen').style.display = 'none';
+  }
+});
+
+// ── AUTH FUNCTIONS ──
+window.switchAuthTab = function(tab) {
+  document.querySelectorAll('.auth-tab').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('login-form').style.display = tab === 'login' ? 'block' : 'none';
+  document.getElementById('register-form').style.display = tab === 'register' ? 'block' : 'none';
+  document.getElementById('auth-error').style.display = 'none';
+};
+
+function showAuthError(msg) {
+  const el = document.getElementById('auth-error');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+window.loginEmail = async function() {
+  const email = document.getElementById('login-email').value.trim();
+  const pass = document.getElementById('login-password').value;
+  if (!email || !pass) { showAuthError('Preencha e-mail e senha.'); return; }
+  try {
+    await signInWithEmailAndPassword(auth, email, pass);
+  } catch(e) {
+    showAuthError('E-mail ou senha incorretos.');
+  }
+};
+
+window.registerEmail = async function() {
+  const name = document.getElementById('reg-name').value.trim();
+  const email = document.getElementById('reg-email').value.trim();
+  const pass = document.getElementById('reg-password').value;
+  if (!name || !email || !pass) { showAuthError('Preencha todos os campos.'); return; }
+  if (pass.length < 6) { showAuthError('A senha deve ter pelo menos 6 caracteres.'); return; }
+  try {
+    const cred = await createUserWithEmailAndPassword(auth, email, pass);
+    await updateProfile(cred.user, { displayName: name });
+  } catch(e) {
+    showAuthError('Erro ao criar conta. Tente outro e-mail.');
+  }
+};
+
+window.loginGoogle = async function() {
+  try {
+    await signInWithPopup(auth, googleProvider);
+  } catch(e) {
+    showAuthError('Erro ao entrar com Google.');
+  }
+};
+
+window.logout = async function() {
+  await signOut(auth);
+};
+
+// ── LOAD DATA ──
+async function loadAppointments() {
+  if (!currentUser) return;
+  try {
+    const q = query(collection(db, 'appointments'), where('userId', '==', currentUser.uid));
+    const snap = await getDocs(q);
+    allAppointments = [];
+    snap.forEach(d => allAppointments.push({ id: d.id, ...d.data() }));
+    allAppointments.sort((a,b) => (a.date + a.timeStart).localeCompare(b.date + b.timeStart));
+    refreshAll();
+    scheduleNotifications();
+  } catch(e) {
+    console.error(e);
+  }
+}
+
+function refreshAll() {
+  renderHome();
+  renderDaily();
+  renderWeekly();
+  renderCalendar();
+}
+
+// ── GREETING ──
+function setupGreeting() {
+  document.getElementById('greeting-text').textContent = greetingMsg();
+  document.getElementById('greeting-sub').textContent = subMsg();
+  const now = new Date();
+  const days = ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
+  const months = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+  document.getElementById('greeting-day-info').textContent = `${days[now.getDay()]}, ${now.getDate()} de ${months[now.getMonth()]}`;
+}
+
+// ── HOME ──
+function renderHome() {
+  const today = todayStr();
+  const weekEnd = dateStr(addDays(getWeekStart(new Date()), 6));
+  const weekStart = dateStr(getWeekStart(new Date()));
+
+  const todayAppts = allAppointments.filter(a => a.date === today && a.status !== 'cancelled');
+  const weekAppts = allAppointments.filter(a => a.date >= weekStart && a.date <= weekEnd && a.status !== 'cancelled');
+  const urgentAppts = allAppointments.filter(a => a.urgency === 'urgent' && a.status === 'pending' && a.date >= today);
+
+  document.getElementById('stat-today').textContent = todayAppts.length;
+  document.getElementById('stat-week').textContent = weekAppts.length;
+  document.getElementById('stat-urgent').textContent = urgentAppts.length;
+
+  const list = document.getElementById('home-today-list');
+  if (todayAppts.length === 0) {
+    list.innerHTML = `<div class="empty-state"><div class="empty-icon">🌸</div><p>Nenhum compromisso pra hoje. Dia livre! 🎉</p></div>`;
+  } else {
+    list.innerHTML = todayAppts.map(a => appointmentCardHTML(a, false)).join('');
+  }
+}
+
+function appointmentCardHTML(a, showActions = true) {
+  const sc = statusClass(a.status);
+  const timeLabel = a.timeStart + (a.timeEnd ? ` – ${a.timeEnd}` : '');
+  const obsHTML = a.obs ? `<div class="appt-obs">${a.obs}</div>` : '';
+  const tagsHTML = `<div class="appt-tags">${urgencyTag(a.urgency)}<span class="tag tag-cat">${catLabel(a.category)}</span>${statusTag(a.status)}</div>`;
+
+  const actionBtns = showActions ? `
+    <div class="appt-actions">
+      <button class="btn-edit" onclick="editAppointment('${a.id}')">✏️ Editar</button>
+      <button class="btn-delete" onclick="deleteAppointmentPrompt('${a.id}')">🗑 Excluir</button>
+    </div>
+    <div class="status-actions">
+      ${a.status !== 'done' ? `<button class="btn-done" onclick="changeStatus('${a.id}','done')">✔ Concluído</button>` : ''}
+      ${a.status !== 'cancelled' ? `<button class="btn-cancel-appt" onclick="changeStatus('${a.id}','cancelled')">✕ Cancelar</button>` : ''}
+      ${a.status !== 'delayed' ? `<button class="btn-delay" onclick="changeStatus('${a.id}','delayed')">⏳ Adiar</button>` : ''}
+      ${a.status !== 'pending' ? `<button class="btn-edit" onclick="changeStatus('${a.id}','pending')">↩ Reativar</button>` : ''}
+    </div>
+  ` : '';
+
+  return `
+    <div class="appointment-card ${sc}" id="card-${a.id}">
+      <div class="appt-time">${timeLabel}</div>
+      <div class="appt-body">
+        <div class="appt-title">${a.name}</div>
+        ${obsHTML}
+        ${tagsHTML}
+        ${actionBtns}
+      </div>
+    </div>
+  `;
+}
+
+// ── DAILY ──
+function renderDaily() {
+  const label = document.getElementById('daily-date-label');
+  label.textContent = `${dayOfWeekPT(currentDailyDate)}, ${formatDateShort(currentDailyDate)}`;
+  window.currentDailyDate = currentDailyDate;
+
+  const appts = allAppointments.filter(a => a.date === currentDailyDate);
+  const list = document.getElementById('daily-list');
+
+  if (appts.length === 0) {
+    list.innerHTML = `<div class="empty-state"><div class="empty-icon">🌸</div><p>Nenhum compromisso neste dia.</p></div>`;
+  } else {
+    list.innerHTML = appts.map(a => appointmentCardHTML(a, true)).join('');
+  }
+}
+
+window.changeDay = function(n) {
+  const d = new Date(currentDailyDate + 'T12:00:00');
+  d.setDate(d.getDate() + n);
+  currentDailyDate = dateStr(d);
+  window.currentDailyDate = currentDailyDate;
+  renderDaily();
+};
+
+// ── WEEKLY ──
+function renderWeekly() {
+  const grid = document.getElementById('weekly-grid');
+  const days = ['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'];
+  const today = todayStr();
+  let html = '';
+
+  for (let i = 0; i < 7; i++) {
+    const d = addDays(currentWeekStart, i);
+    const ds = dateStr(d);
+    const isToday = ds === today;
+    const dayAppts = allAppointments.filter(a => a.date === ds);
+    const LIMIT = 3;
+    const shown = dayAppts.slice(0, LIMIT);
+    const extra = dayAppts.slice(LIMIT);
+
+    const apptHTML = shown.map(a => `
+      <div class="weekly-appt ${statusClass(a.status)}" onclick="editAppointment('${a.id}')">
+        <div class="w-time">${a.timeStart}${a.timeEnd ? '–'+a.timeEnd : ''}</div>
+        <div class="w-title">${a.name}</div>
+      </div>
+    `).join('');
+
+    const extraHTML = extra.length > 0 ? `
+      <div id="extra-${ds}" style="display:none">
+        ${extra.map(a => `
+          <div class="weekly-appt ${statusClass(a.status)}" onclick="editAppointment('${a.id}')">
+            <div class="w-time">${a.timeStart}${a.timeEnd ? '–'+a.timeEnd : ''}</div>
+            <div class="w-title">${a.name}</div>
+          </div>
+        `).join('')}
+      </div>
+      <button class="see-more-btn" id="seebtn-${ds}" onclick="toggleExtra('${ds}')">Ver mais (${extra.length})</button>
+    ` : '';
+
+    html += `
+      <div class="weekly-col ${isToday ? 'today' : ''}">
+        <div class="weekly-col-header">
+          ${days[i]}<span class="day-num">${d.getDate()}</span>
+        </div>
+        <div class="weekly-col-body">
+          ${dayAppts.length === 0 ? '<div style="font-size:0.7rem;color:var(--text-light);text-align:center;padding:10px 0">Livre 🌸</div>' : ''}
+          ${apptHTML}
+          ${extraHTML}
+          <button class="weekly-add-btn" onclick="openModal(null,'${ds}')">+ Adicionar</button>
+        </div>
+      </div>
+    `;
+  }
+
+  grid.innerHTML = html;
+
+  const ws = dateStr(currentWeekStart);
+  const we = dateStr(addDays(currentWeekStart, 6));
+  document.getElementById('weekly-label').textContent = `${formatDateShort(ws)} – ${formatDateShort(we)}`;
+}
+
+window.toggleExtra = function(ds) {
+  const el = document.getElementById(`extra-${ds}`);
+  const btn = document.getElementById(`seebtn-${ds}`);
+  if (el.style.display === 'none') {
+    el.style.display = 'block';
+    btn.textContent = 'Ver menos';
+  } else {
+    el.style.display = 'none';
+    const count = el.querySelectorAll('.weekly-appt').length;
+    btn.textContent = `Ver mais (${count})`;
+  }
+};
+
+window.changeWeek = function(n) {
+  currentWeekStart = addDays(currentWeekStart, n * 7);
+  renderWeekly();
+};
+
+// ── CALENDAR ──
+function renderCalendar() {
+  const year = currentCalMonth.getFullYear();
+  const month = currentCalMonth.getMonth();
+  const months = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  document.getElementById('cal-month-title').textContent = `${months[month]} ${year}`;
+
+  const grid = document.getElementById('calendar-grid');
+  const headers = ['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'];
+  let html = headers.map(h => `<div class="cal-day-header">${h}</div>`).join('');
+
+  const firstDay = new Date(year, month, 1);
+  let startDay = firstDay.getDay(); // 0=Sun
+  startDay = startDay === 0 ? 6 : startDay - 1; // Monday-based
+
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const prevDays = new Date(year, month, 0).getDate();
+
+  const today = todayStr();
+
+  // Prev month days
+  for (let i = startDay - 1; i >= 0; i--) {
+    const day = prevDays - i;
+    const ds = `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    html += `<div class="cal-day other-month"><div class="cal-day-num">${day}</div></div>`;
+  }
+
+  // Current month
+  for (let d = 1; d <= daysInMonth; d++) {
+    const ds = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const isToday = ds === today;
+    const dayAppts = allAppointments.filter(a => a.date === ds && a.status === 'pending');
+    const count = dayAppts.length;
+    const dots = dayAppts.slice(0,5).map(a => `<div class="cal-dot ${a.urgency === 'urgent' ? 'urgent' : a.urgency === 'low' ? 'low' : 'normal'}"></div>`).join('');
+    const countLabel = count > 0 ? `<div class="cal-appt-count">${count} compromisso${count>1?'s':''}</div>` : '';
+
+    html += `
+      <div class="cal-day ${isToday ? 'today' : ''}" onclick="openDayPopup('${ds}')">
+        <div class="cal-day-num">${d}</div>
+        ${countLabel}
+        <div class="cal-appt-dots">${dots}</div>
+      </div>
+    `;
+  }
+
+  grid.innerHTML = html;
+}
+
+window.changeMonth = function(n) {
+  currentCalMonth.setMonth(currentCalMonth.getMonth() + n);
+  renderCalendar();
+};
+
+// ── DAY POPUP ──
+window.openDayPopup = function(ds) {
+  selectedCalDay = ds;
+  document.getElementById('day-popup-date').textContent = formatDatePT(ds);
+  const appts = allAppointments.filter(a => a.date === ds);
+  const list = document.getElementById('day-popup-list');
+  if (appts.length === 0) {
+    list.innerHTML = `<div style="text-align:center;color:var(--text-light);font-size:0.85rem;padding:20px">Nenhum compromisso 🌸</div>`;
+  } else {
+    list.innerHTML = appts.map(a => `
+      <div class="appointment-card ${statusClass(a.status)}" style="cursor:pointer" onclick="editAppointment('${a.id}');closeDayPopup()">
+        <div class="appt-time">${a.timeStart}${a.timeEnd ? '–'+a.timeEnd : ''}</div>
+        <div class="appt-body">
+          <div class="appt-title">${a.name}</div>
+          ${a.obs ? `<div class="appt-obs">${a.obs}</div>` : ''}
+          <div class="appt-tags">${urgencyTag(a.urgency)}<span class="tag tag-cat">${catLabel(a.category)}</span>${statusTag(a.status)}</div>
+        </div>
+      </div>
+    `).join('');
+  }
+  document.getElementById('day-popup-overlay').classList.add('open');
+};
+
+window.closeDayPopup = function() {
+  document.getElementById('day-popup-overlay').classList.remove('open');
+};
+
+window.goToDailyFromPopup = function() {
+  closeDayPopup();
+  currentDailyDate = selectedCalDay;
+  window.currentDailyDate = currentDailyDate;
+  showScreen('daily');
+};
+
+// ── MODAL ──
+window.openModal = function(id = null, date = null) {
+  editingId = id;
+  editingGroupId = null;
+
+  const modal = document.getElementById('modal-overlay');
+  modal.classList.add('open');
+
+  if (id) {
+    const a = allAppointments.find(x => x.id === id);
+    if (!a) return;
+    document.getElementById('modal-title').textContent = 'Editar compromisso';
+    document.getElementById('f-name').value = a.name;
+    document.getElementById('f-obs').value = a.obs || '';
+    document.getElementById('f-date').value = a.date;
+    document.getElementById('f-time-start').value = a.timeStart;
+    document.getElementById('f-time-end').value = a.timeEnd || '';
+    document.getElementById('f-urgency').value = a.urgency || 'normal';
+    document.getElementById('f-category').value = a.category || 'outro';
+    setRepeat('none');
+    editingGroupId = a.groupId || null;
+  } else {
+    document.getElementById('modal-title').textContent = 'Novo compromisso';
+    document.getElementById('f-name').value = '';
+    document.getElementById('f-obs').value = '';
+    document.getElementById('f-date').value = date || todayStr();
+    document.getElementById('f-time-start').value = '';
+    document.getElementById('f-time-end').value = '';
+    document.getElementById('f-urgency').value = 'normal';
+    document.getElementById('f-category').value = 'outro';
+    setRepeat('none');
+  }
+};
+
+window.closeModal = function() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  editingId = null;
+  editingGroupId = null;
+};
+
+window.setRepeat = function(val) {
+  currentRepeat = val;
+  document.querySelectorAll('.repeat-opt').forEach(b => {
+    b.classList.toggle('active', b.dataset.val === val);
+  });
+  const div = document.getElementById('repeat-duration-div');
+  if (val === 'none') {
+    div.classList.remove('show');
+  } else {
+    div.classList.add('show');
+    const label = document.getElementById('repeat-duration-label');
+    if (val === 'daily') label.textContent = 'Repetir durante quantos dias?';
+    else if (val === 'weekly') label.textContent = 'Repetir durante quantas semanas?';
+    else label.textContent = 'Repetir durante quantos meses?';
+  }
+};
+
+// ── CONFLICT CHECK ──
+function hasConflict(date, startTime, endTime, excludeId = null) {
+  if (!endTime) return false;
+  const appts = allAppointments.filter(a => a.date === date && a.id !== excludeId && a.status !== 'cancelled');
+  for (const a of appts) {
+    const aEnd = a.timeEnd || a.timeStart;
+    if (startTime < aEnd && endTime > a.timeStart) {
+      return a;
+    }
+  }
+  return false;
+}
+
+// ── SAVE ──
+window.saveAppointment = async function() {
+  const name = document.getElementById('f-name').value.trim();
+  const obs = document.getElementById('f-obs').value.trim();
+  const date = document.getElementById('f-date').value;
+  const timeStart = document.getElementById('f-time-start').value;
+  const timeEnd = document.getElementById('f-time-end').value;
+  const urgency = document.getElementById('f-urgency').value;
+  const category = document.getElementById('f-category').value;
+  const repeatCount = parseInt(document.getElementById('f-repeat-count').value) || 1;
+
+  if (!name || !date || !timeStart) {
+    showToast('⚠️ Preencha nome, data e horário!');
+    return;
+  }
+
+  // Conflict check
+  const conflict = hasConflict(date, timeStart, timeEnd, editingId);
+  if (conflict) {
+    showToast(`⚠️ Conflito com "${conflict.name}" (${conflict.timeStart}–${conflict.timeEnd || conflict.timeStart})`);
+    return;
+  }
+
+  const data = { name, obs, date, timeStart, timeEnd, urgency, category, userId: currentUser.uid, status: 'pending' };
+
+  if (editingId) {
+    // EDIT
+    if (editingGroupId) {
+      const choice = await showRepeatConfirm('Editar compromisso recorrente', 'Deseja editar apenas este ou todos os próximos?');
+      if (choice === 'cancel') return;
+      if (choice === 'all') {
+        const grouped = allAppointments.filter(a => a.groupId === editingGroupId && a.date >= date);
+        for (const a of grouped) {
+          const dd = { ...data, date: a.date, groupId: editingGroupId };
+          await updateDoc(doc(db, 'appointments', a.id), dd);
+        }
+      } else {
+        await updateDoc(doc(db, 'appointments', editingId), { ...data, groupId: null });
+      }
+    } else {
+      await updateDoc(doc(db, 'appointments', editingId), data);
+    }
+    showToast('✅ Compromisso atualizado!');
+  } else {
+    // CREATE
+    if (currentRepeat === 'none') {
+      await addDoc(collection(db, 'appointments'), data);
+    } else {
+      const groupId = `group_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+      let dates = [];
+      for (let i = 0; i < repeatCount; i++) {
+        let d = new Date(date + 'T12:00:00');
+        if (currentRepeat === 'daily') d.setDate(d.getDate() + i);
+        else if (currentRepeat === 'weekly') d.setDate(d.getDate() + i * 7);
+        else d.setMonth(d.getMonth() + i);
+        dates.push(dateStr(d));
+      }
+      for (const dd of dates) {
+        await addDoc(collection(db, 'appointments'), { ...data, date: dd, groupId });
+      }
+    }
+    showToast('🌷 Compromisso adicionado!');
+  }
+
+  closeModal();
+  await loadAppointments();
+};
+
+// ── EDIT ──
+window.editAppointment = function(id) {
+  openModal(id, null);
+};
+
+// ── DELETE ──
+window.deleteAppointmentPrompt = async function(id) {
+  const a = allAppointments.find(x => x.id === id);
+  if (!a) return;
+
+  if (a.groupId) {
+    const choice = await showRepeatConfirm('Excluir compromisso recorrente', 'Deseja excluir apenas este ou todos os próximos?');
+    if (choice === 'cancel') return;
+    if (choice === 'all') {
+      const grouped = allAppointments.filter(g => g.groupId === a.groupId && g.date >= a.date);
+      for (const g of grouped) await deleteDoc(doc(db, 'appointments', g.id));
+    } else {
+      await deleteDoc(doc(db, 'appointments', id));
+    }
+  } else {
+    if (!confirm('Deseja excluir este compromisso?')) return;
+    await deleteDoc(doc(db, 'appointments', id));
+  }
+
+  showToast('🗑 Compromisso excluído.');
+  await loadAppointments();
+};
+
+// ── STATUS CHANGE ──
+window.changeStatus = async function(id, status) {
+  await updateDoc(doc(db, 'appointments', id), { status });
+  const labels = { done:'✅ Marcado como concluído!', cancelled:'✕ Compromisso cancelado.', delayed:'⏳ Compromisso adiado.', pending:'↩ Reativado!' };
+  showToast(labels[status] || 'Atualizado!');
+  await loadAppointments();
+};
+
+// ── REPEAT CONFIRM ──
+function showRepeatConfirm(title, msg) {
+  return new Promise(resolve => {
+    pendingConfirmResolve = resolve;
+    document.getElementById('confirm-title').textContent = title;
+    document.getElementById('confirm-msg').textContent = msg;
+    document.getElementById('confirm-btns').innerHTML = `
+      <button class="btn-no" onclick="resolveConfirm('cancel')">Cancelar</button>
+      <button class="btn-this-only" onclick="resolveConfirm('this')">Só este</button>
+      <button class="btn-all" onclick="resolveConfirm('all')">Todos os próximos</button>
+    `;
+    document.getElementById('confirm-overlay').classList.add('open');
+  });
+}
+
+window.resolveConfirm = function(val) {
+  document.getElementById('confirm-overlay').classList.remove('open');
+  if (pendingConfirmResolve) {
+    pendingConfirmResolve(val);
+    pendingConfirmResolve = null;
+  }
+};
+
+// ── NAVIGATION ──
+window.showScreen = function(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById(`screen-${name}`).classList.add('active');
+  document.getElementById(`nav-${name}`).classList.add('active');
+
+  const titles = { home:'Início', daily:'Agenda Diária', weekly:'Agenda Semanal', calendar:'Calendário' };
+  document.getElementById('mobile-screen-title').textContent = titles[name] || '';
+
+  if (name === 'daily') renderDaily();
+  if (name === 'weekly') renderWeekly();
+  if (name === 'calendar') renderCalendar();
+
+  closeSidebar();
+};
+
+window.toggleSidebar = function() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebar-overlay').classList.toggle('open');
+};
+
+window.closeSidebar = function() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('open');
+};
+
+// ── NOTIFICATIONS ──
+function requestNotificationPermission() {
+  if ('Notification' in window && Notification.permission === 'default') {
+    Notification.requestPermission();
+  }
+}
+
+function scheduleNotifications() {
+  const now = new Date();
+  const today = todayStr();
+  const todayAppts = allAppointments.filter(a => a.date === today && a.status === 'pending');
+
+  todayAppts.forEach(a => {
+    const [h, m] = a.timeStart.split(':').map(Number);
+    const apptTime = new Date();
+    apptTime.setHours(h, m, 0, 0);
+    const notifTime = new Date(apptTime.getTime() - 15 * 60 * 1000); // 15min before
+
+    const delay = notifTime.getTime() - now.getTime();
+    if (delay > 0 && delay < 24 * 60 * 60 * 1000) {
+      setTimeout(() => {
+        if (Notification.permission === 'granted') {
+          new Notification('🌷 Lembrete — Agenda Tulipa', {
+            body: `Em 15 minutos: ${a.name} às ${a.timeStart}`,
+            icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🌷</text></svg>'
+          });
+        }
+      }, delay);
+    }
+  });
+}
+
+// ── CLOSE MODALS ON BACKDROP ──
+document.getElementById('modal-overlay').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+document.getElementById('day-popup-overlay').addEventListener('click', function(e) {
+  if (e.target === this) closeDayPopup();
+});
+</script>
+
+</body>
+</html>
